@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Claude с нуля — гайд для новичков | maysoulme</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=Inter:wght@400;500;600;700&family=DM+Sans:ital@1&display=swap" rel="stylesheet">
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { font-family:'Inter',sans-serif; font-size:17px; color:#1a1a1a; background:#fff; line-height:1.65; }
+  .wrap { max-width:820px; margin:0 auto; padding:0 24px; }
+  nav { display:flex; justify-content:space-between; align-items:center; padding:20px 24px; border-bottom:1px solid #e8e8e8; max-width:820px; margin:0 auto; }
+  nav img { height:38px; }
+  nav .nick { font-family:'DM Sans',sans-serif; font-style:italic; color:#888; font-size:16px; }
+  h1 { font-family:'Libre Baskerville',serif; font-size:36px; line-height:1.25; margin:56px 0 18px; }
+  h1 em, h2 em { color:#710C04; }
+  h2 { font-family:'Libre Baskerville',serif; font-size:25px; margin:64px 0 16px; }
+  h3 { font-size:18px; font-weight:700; margin:26px 0 8px; }
+  p { margin:0 0 14px; }
+  .lead { font-size:19px; color:#444; }
+  .num { font-family:'Libre Baskerville',serif; font-style:italic; color:#710C04; font-size:22px; margin-right:10px; }
+  .gray { background:#f5f5f5; padding:22px 24px; margin:20px 0; }
+  table { width:100%; border-collapse:collapse; margin:18px 0; font-size:16px; }
+  th, td { text-align:left; padding:10px 12px; border-bottom:1px solid #e8e8e8; vertical-align:top; }
+  th { font-weight:600; background:#f5f5f5; }
+  code, .mono { font-family:ui-monospace,Menlo,monospace; font-size:14.5px; background:#f5f5f5; padding:1px 6px; }
+  .btn { display:inline-block; background:#710C04; color:#fff; padding:14px 26px; font-weight:600; text-decoration:none; font-size:16px; border:none; cursor:pointer; margin:6px 10px 6px 0; }
+  .btn:hover { background:#8d1508; }
+  ul, ol { margin:0 0 16px 22px; }
+  li { margin-bottom:9px; }
+  .tip { border:1px solid #710C04; padding:18px 22px; margin:20px 0; }
+  .tip b { color:#710C04; }
+  .prompt { background:#1a1a1a; color:#eee; padding:20px 22px; font-family:ui-monospace,Menlo,monospace; font-size:14px; white-space:pre-wrap; margin:14px 0; }
+  .check { background:#f5f5f5; padding:22px 24px; margin:20px 0; }
+  .check li { list-style:none; margin-left:0; }
+  .check li:before { content:"✓ "; color:#710C04; font-weight:700; }
+  a { color:#710C04; }
+  footer { margin:80px 0 40px; padding-top:24px; border-top:1px solid #e8e8e8; color:#888; font-size:15px; }
+  @media (max-width:600px){ h1{font-size:28px} h2{font-size:22px} th,td{font-size:14px;padding:8px} }
+</style>
+</head>
+<body>
+<nav><img src="logo.png" alt="MS"><span class="nick">maysoulme</span></nav>
+<div class="wrap">
+
+<h1><em>Claude</em> с нуля: подключаем всё как у меня</h1>
+<p class="lead">Этот гайд для тебя, если ты никогда не пользовалась Claude — или скачала и не поняла, что с ним делать. Пройди шаги по порядку, ничего не пропуская. В конце у тебя будет полностью настроенный Claude, которому можно сказать «смонтируй ролик» или «сделай презентацию» — и он сделает.</p>
+
+<div class="gray">
+<b>Что такое Claude, простыми словами.</b>
+<p style="margin-top:10px">Claude — это ИИ-помощник, как ChatGPT, только от другой компании (Anthropic). А <b>Claude Code</b> — это его версия для компьютера, которая умеет не просто болтать, а <b>делать</b>: работать с твоими файлами, монтировать видео, создавать документы, ходить в интернет. Ты пишешь задачу по-человечески — он выполняет. Это как нанять ассистента, который живёт в твоём ноутбуке.</p>
+<p style="margin-bottom:0"><b>Что понадобится:</b> компьютер (Mac или Windows), интернет, карта для оплаты подписки и минут 30 времени. Всё.</p>
+</div>
+
+<h2><span class="num">01.</span>Заведи аккаунт</h2>
+<ol>
+<li>Открой в браузере сайт <b>claude.ai</b></li>
+<li>Нажми <b>Sign up</b> (регистрация)</li>
+<li>Проще всего — войти через Google-почту: нажми «Continue with Google» и выбери свою почту</li>
+<li>Подтверди телефон, если попросит</li>
+</ol>
+<div class="tip"><b>Если ты из России:</b> сайт может не открываться без VPN, а российская карта не пройдёт для оплаты. Как это решить — у меня есть отдельный гайд про регистрацию и оплату Claude из России, напиши мне в телеграм слово «гайд», пришлю.</div>
+
+<h2><span class="num">02.</span>Оформи подписку</h2>
+<p>Бесплатная версия для нашей задачи не подходит — нужна подписка <b>Pro</b> (примерно $17–20 в месяц, около 2000 ₽). Это тот самый «монтажёр за 2 тысячи в месяц вместо 2–3 тысяч за один ролик».</p>
+<ol>
+<li>На сайте claude.ai нажми на своё имя внизу слева → <b>Upgrade plan</b></li>
+<li>Выбери план <b>Pro</b></li>
+<li>Привяжи карту и оплати</li>
+</ol>
+<p>Проверка: сверху в чате должно появиться слово Pro или выбор моделей.</p>
+
+<h2><span class="num">03.</span>Установи Claude Code на компьютер</h2>
+<ol>
+<li>Зайди на <a href="https://claude.com/claude-code">claude.com/claude-code</a></li>
+<li>Нажми <b>Download</b> — сайт сам поймёт, Mac у тебя или Windows</li>
+<li><b>Mac:</b> открой скачанный файл и перетащи иконку Claude в папку «Программы» (Applications). Потом запусти из Программ. Если Mac спросит «точно открыть?» — жми «Открыть»</li>
+<li><b>Windows:</b> открой скачанный файл и жми «Далее» до конца установки</li>
+<li>Запусти Claude и <b>войди в тот же аккаунт</b>, который завела на шаге 1 (кнопка Log in — через браузер)</li>
+</ol>
+<p>Перед тобой откроется окно с полем для ввода текста внизу. Это и есть твой ассистент. 90% работы происходит здесь: ты пишешь — он делает.</p>
+
+<h2><span class="num">04.</span>Пойми главные правила общения</h2>
+<ul>
+<li><b>Пиши по-человечески.</b> Никаких специальных команд не нужно. «Создай мне папку для роликов», «переименуй эти файлы», «сделай из этого текста красивый документ» — всё так и пишется, словами.</li>
+<li><b>Он будет спрашивать разрешения.</b> Перед тем как что-то сделать на твоём компьютере, Claude часто спрашивает: «Можно выполнить то-то?» Если это то, что ты просила — жми <b>Yes / Разрешить</b>. Это нормально, так задумано для безопасности.</li>
+<li><b>Файлы можно просто перетаскивать</b> прямо в окно чата — скрины, видео, документы. Он их увидит и поймёт.</li>
+<li><b>Если что-то пошло не так</b> — просто напиши словами: «стоп», «отмени», «переделай, но по-другому». Он поймёт.</li>
+<li><b>Один чат — одна задача.</b> Закончила с монтажом — для новой задачи начни новый чат (кнопка + или New chat). Так он не путается.</li>
+</ul>
+
+<h2><span class="num">05.</span>Проверь, что всё работает</h2>
+<p>Скопируй это сообщение и отправь Claude:</p>
+<div class="prompt">Привет! Создай у меня на рабочем столе папку «тест» и положи в неё текстовый файл со словом «работает». Потом скажи, что сделал.</div>
+<p>Он спросит разрешение — разреши. Если через несколько секунд на рабочем столе появилась папка «тест» с файлом — поздравляю, у тебя настоящий работающий ассистент. Папку можно удалить.</p>
+
+<h2><span class="num">06.</span>Подключи скилл монтажа</h2>
+<p>Теперь главное — научи своего Claude монтировать ролики, как мой. Для этого есть отдельная страница с готовым скиллом и всеми файлами:</p>
+<p><a class="btn" href="index.html">Открыть страницу со скиллом монтажа</a></p>
+<p>Там всё по шагам: скачаешь файл скилла, скажешь Claude его установить, разложишь файлы по папкам. На всё уйдёт минут 15.</p>
+<div class="tip"><b>Самый простой путь:</b> скачай оттуда файл скилла, перетащи его в чат Claude и напиши: <span class="mono">«установи себе этот скилл сам, создай все нужные папки и скажи, что куда положить»</span>. Он запросит несколько подтверждений — везде соглашайся. Дальше он сам всё сделает и отчитается.</div>
+
+<h2><span class="num">07.</span>Приучи его к себе</h2>
+<p>Claude умеет запоминать твои предпочтения между разговорами. Скажи ему один раз:</p>
+<div class="prompt">Запомни: общайся со мной на «ты» и по-русски. Не переспрашивай по мелочам — делай. Я создаю контент для соцсетей, ты — мой помощник по монтажу и контенту.</div>
+<p>Дальше добавляй свои правила по ходу: «запомни, что субтитры я люблю покрупнее», «запомни, что мой ник @такой-то». Чем больше он про тебя знает — тем меньше вопросов задаёт.</p>
+
+<h2><span class="num">08.</span>Если что-то не получается</h2>
+<table>
+<tr><th>Проблема</th><th>Что делать</th></tr>
+<tr><td>Пишет по-английски</td><td>Напиши: «говори со мной по-русски» — и попроси запомнить</td></tr>
+<tr><td>Говорит, что нужна подписка</td><td>Проверь, что вошла в тот же аккаунт, где оплачивала Pro (шаг 2)</td></tr>
+<tr><td>Что-то сделал не так</td><td>Напиши словами, что не так: «субтитры съехали, поправь». Он переделает</td></tr>
+<tr><td>Завис или странно себя ведёт</td><td>Начни новый чат и опиши задачу заново. Это лечит почти всё</td></tr>
+<tr><td>Спрашивает разрешение на непонятное</td><td>Спроси его же: «объясни простыми словами, что ты хочешь сделать и зачем». Он объяснит — потом решай</td></tr>
+<tr><td>Не находит твои файлы</td><td>Скажи точно, где они лежат: «файлы на рабочем столе в папке reels» — или просто перетащи файл в чат</td></tr>
+</table>
+
+<h2><span class="num">09.</span>Чек-лист: у тебя всё готово, если…</h2>
+<div class="check">
+<ul style="margin-bottom:0">
+<li>Есть аккаунт claude.ai с подпиской Pro</li>
+<li>Claude Code установлен и открывается на компьютере</li>
+<li>Тест из шага 05 сработал — папка создалась</li>
+<li>Скилл монтажа установлен, папки созданы, файлы шаблона разложены</li>
+<li>Claude запомнил, кто ты и как с тобой общаться</li>
+</ul>
+</div>
+<p>Всё — у тебя такой же подключённый Claude, как у меня. Кидай в папку input своё первое видео, пиши ТЗ и забирай смонтированный ролик. Как писать ТЗ — на <a href="index.html">странице скилла</a>, шаг 05.</p>
+
+<footer>
+<p>Гайд — <span style="font-family:'DM Sans',sans-serif;font-style:italic">maysoulme</span>. Застряла на каком-то шаге — напиши мне в директ, разберёмся.</p>
+</footer>
+</div>
+</body>
+</html>
