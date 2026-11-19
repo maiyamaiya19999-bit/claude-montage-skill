@@ -23,18 +23,38 @@
       const response = await fetch('./pack-120/manifest.json');
       if (!response.ok) throw new Error('network');
       const manifest = await response.json();
-      const pieces = [];
+      const pieces = new Array(manifest.chunks.length);
       let loaded = 0;
-      for (const part of manifest.chunks) {
-        const response = await fetch('./pack-120/' + part.file);
-        if (!response.ok) throw new Error('network');
-        const bytes = await crypto.subtle.decrypt({name:'AES-GCM',iv:fromBase64(part.iv)}, key, await response.arrayBuffer());
-        if (bytes.byteLength !== part.size) throw new Error('size');
-        pieces.push(new Blob([bytes]));
-        loaded += bytes.byteLength;
-        progress.value = Math.floor(100 * loaded / manifest.bytes);
-        status.textContent = 'Скачивание · '+progress.value+'%';
+      let next = 0;
+      const controller = new AbortController();
+      async function readPart(part) {
+        for (let attempt = 0; ; attempt++) {
+          try {
+            const response = await fetch('./pack-120/' + part.file, {signal:controller.signal});
+            if (!response.ok) throw new Error('network');
+            return await response.arrayBuffer();
+          } catch (error) {
+            if (attempt >= 2 || controller.signal.aborted) throw error;
+            await new Promise(resolve => setTimeout(resolve, 700 * (attempt + 1)));
+          }
+        }
       }
+      async function downloadParts() {
+        while (next < pieces.length && !controller.signal.aborted) {
+          const index = next++;
+          const part = manifest.chunks[index];
+          const ciphertext = await readPart(part);
+          const bytes = await crypto.subtle.decrypt({name:'AES-GCM',iv:fromBase64(part.iv)}, key, ciphertext);
+          if (bytes.byteLength !== part.size) throw new Error('size');
+          pieces[index] = new Blob([bytes]);
+          loaded += bytes.byteLength;
+          progress.value = Math.floor(100 * loaded / manifest.bytes);
+          status.textContent = 'Скачано '+Math.round(loaded/1e6)+' из '+Math.round(manifest.bytes/1e6)+' МБ · '+progress.value+'%';
+        }
+      }
+      try {
+        await Promise.all(Array.from({length:Math.min(4,pieces.length)}, downloadParts));
+      } finally { controller.abort(); }
       if (loaded !== manifest.bytes) throw new Error('size');
       save.href = URL.createObjectURL(new Blob(pieces,{type:'application/zip'}));
       save.hidden = false;
